@@ -1,6 +1,8 @@
 #Jeremy Chan 2020
 #Class to extract todays earnings from fidelity
 import requests
+from datetime import date
+from datetime import timedelta
 from bs4 import BeautifulSoup
 
 URL_BASE = "https://eresearch.fidelity.com/eresearch/conferenceCalls.jhtml?tab=earnings&begindate="
@@ -22,7 +24,15 @@ def extractStockTableForDate(date):
     return table
     
 def extractStockDataFromRow(htmlRow):
-    return 0
+    return
 
-print(extractStockTableForDate("10/22/2020")[0])
+def main():
+    today = date.today().strftime("%m/%d/%Y")
+    yesterday = (date.today() - timedelta(days = 1)).strftime("%m/%d/%Y")
+    print(today)
+    print(yesterday)
+
+
+main()
+
 

@@ -1,0 +1,131 @@
+{
+    "context": {
+        "dispatcher" : {
+            "stores" : {
+                "QuoteSummaryStore" : {
+                    "defaultKeyStatistics" : {
+                        "enterpriseToRevenue"
+                        "beta3Year"
+                        "profitMargins"
+                        "enterpriseToEbitda"
+                        "morningStarRiskRating"
+                        "forwardEps"
+                        "revenueQuarterlyGrowth"
+                        "sharesShort"
+                        "heldPercentInstitutions"
+                        "trailingEps"
+                        "priceToBook"
+                        "heldPercentInsiders"
+                        "shortRatio"
+                        "sharesShortPreviousMonthDate"
+                        "floatShares"
+                        "beta"
+                        "morningStarOverallRating"
+                        "earningsQuarterlyGrowth"
+                        "forwardPE"
+                        "shortPercentOfFloat"
+                        "sharesShortPriorMonth"                  
+                    }
+                    "recommendationTrend": //analyst recommendations
+                    "price" : {
+                        "averageDailyVolume3Month"
+                        "averageDailyVolume10Day"
+                        "regularMarketChange"
+                        "preMarketPrice"
+                        "postMarketPrice"
+                        "regularMarketChangePercent"
+                    }
+                    "financialData" : {
+                        "ebitdaMargins"
+                        "profitMargins"
+                        "grossMargins"
+                        "operatingCashflow"
+                        "revenueGrowth"
+                        "operatingMargins"
+                        "ebitda"
+                        "targetLowPrice"
+                        "recommendationKey"
+                        "freeCashflow"
+                        "targetMedianPrice"
+                        "currentPrice"
+                        "earningsGrowth"
+                        "currentRatio"
+                        "returnOnAssets"
+                        "targetMeanPrice"
+                        "debtToEquity"
+                        "returnOnEquity"
+                        "targetHighPrice"
+                        "totalCashPerShare"
+                        "revenuePerShare"
+                        "quickRatio"
+                        "recommendationMean"
+                    }
+                    "summaryDetail" //more detailed price quote data (potentially useful)
+                    "esgScores" //social responsibility scores, might be a fun one
+                    "pageViews" //page view trend for this ticker (probably useful)
+                }
+                "ResearchPageStore" : {
+                    "results" : {
+                        "rows" : [
+                            {
+                                "reportTitle": //analyst report
+                            }
+                            ]
+                    }
+                    "technicalEvents"
+                    "technicalInsights" : {
+                        "TICKER(CRM)": {
+                            "companySnapshot" : {
+                                "company": {
+                                    "innovativeness" : //innovation score
+                                    "sustainability" : //sustainability score
+                                    "insiderSentiments" :
+                                    "earningsReports":
+                                }
+                                "sector" : {
+                                    "innovativeness"
+                                    "hiring"
+                                    "sustainability"
+                                    "insiderSentiments"
+                                    "earningsReports"
+                                    "dividends"
+                                }
+                            }
+                            "instrumentInfo" : {
+                                "technicalEvents": {
+                                    "shortTermOutlook": {
+                                        "direction" : //Bearish/bullish
+                                        "score"
+                                        "sectorDirection" : //Bearish/bullish
+                                        "sectorScore"
+                                        "indexDirection"
+                                        "indexScore"
+                                    }
+                                    "intermediateTermOutlook" //same as shortTerm
+                                    "longTermOutlook"
+                                }
+                                "keyTechnicals": {
+                                    "support"
+                                    "resistance"
+                                    "stopLoss"
+                                }
+                                "valuation" {
+                                    "description" : //overvalued
+                                }
+                            }
+                            "events" : {
+                                "eventType": //Price Crosses Moving Average
+                            }
+                            "recommendation" : {
+                                "targetPrice" : 315
+                            }
+                        
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+}
+               
