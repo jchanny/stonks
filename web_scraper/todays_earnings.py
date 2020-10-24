@@ -29,8 +29,11 @@ def extractStockDataFromRow(htmlRow):
 def main():
     today = date.today().strftime("%m/%d/%Y")
     yesterday = (date.today() - timedelta(days = 1)).strftime("%m/%d/%Y")
-    print(today)
-    print(yesterday)
+    #parse yesterday afternoon earnings
+    data = extractStockTableForDate(yesterday)
+    for earnings in data:
+        if earnings[1] != 'After Market':
+            continue
 
 
 main()
