@@ -62,7 +62,10 @@ def getFundamentalsSummary(jsonDump):
 
     output['fundamentals'] = fundamentalStats
     return output
-    
+
+#------------------------------------------
+#main methods
+#------------------------------------------
 #kills off some subscripts to minimize the JSON dump    
 def cleanUpJSON(jsonDump):
     del jsonDump['context']['dispatcher']['stores']['PageStore']
