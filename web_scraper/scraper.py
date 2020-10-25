@@ -3,15 +3,24 @@
 
 #REVISION HISTORY
 # 10/2020 - Created
-
+from datetime import date
+from datetime import timedelta
 import todays_earnings as er
-import yahoo_finance_quote_scaper as yf
+import yahoo_finance_quote_scraper as yf
 
-def getEarningsDataForDate(date):
-    earningsTable = er.extractStockTableForDate(date)
+def todaysEarningsResults():
+   # today = date.today().strftime("%m/%d/%Y")
+    today = date.today()
+    today = (today - timedelta(days = 4)).strftime("%m/%d/%Y")
+    earningsTable = er.getEarningsForDate(today)
+    if earningsTable[0][0] == '':
+        return "Could not get earnings list"
+
     data = {}
-    
     for earnings in earningsTable:
         ticker = earnings[0]
-        data[ticker] = getTodaysData(ticker)
+        data[ticker] = yf.getTodaysData(ticker)
+
+    return data       
         
+print(todaysEarningsResults())

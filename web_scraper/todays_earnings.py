@@ -1,7 +1,7 @@
 #Jeremy Chan 2020
 #Class to extract todays earnings from fidelity
 import requests
-from datetime import date
+from datetime import datetime
 from datetime import timedelta
 from bs4 import BeautifulSoup
 
@@ -16,23 +16,32 @@ def extractStockTableForDate(date):
     table = []
     soup = BeautifulSoup(getEarningsHTMLForDate(date), 'lxml')
     table_body = soup.find('tbody')
-    print(table_body)
     rows = table_body.find_all('tr')
     for row in rows:
         cols = row.find_all('td')
         cols = [x.text.strip() for x in cols]
         table.append(cols)
     return table
-    
-def main():
-    today = date.today().strftime("%m/%d/%Y")
-    yesterday = (date.today() - timedelta(days = 1)).strftime("%m/%d/%Y")
-    #parse yesterday afternoon earnings
-    data = extractStockTableForDate(yesterday)
-    for earnings in data:
-        if earnings[1] != 'After Market':
-            continue
 
-print(extractStockTableForDate("10/23/2020"))
+#given a date formatted as "m/d/YYYY" returns earnings annountcements
+#morning of and EOD yesterday
+def getEarningsForDate(dt):
+    tStr = datetime.strptime(dt, "%m/%d/%Y")
+    tMinusOne = (tStr - timedelta(days = 1)).strftime("%m/%d/%Y")
+    t = tStr.strftime("%m/%d/%Y")
+    output = []
+    #parse tMinusOne afternoon earnings
+    data = extractStockTableForDate(tMinusOne)
+    for earnings in data:
+        if earnings[1] == 'After Market':
+            output.append(earnings)
+
+    #this mornings earning reports
+    data = extractStockTableForDate(t)
+    for earnings in data:
+        if earnings[1] == 'Before Market':           
+            output.append(earnings)
+
+    return output
 
 

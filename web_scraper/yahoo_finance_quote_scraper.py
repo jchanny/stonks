@@ -110,7 +110,8 @@ def getJSONDataDump(ticker):
 #main entry point. given ticker, gib json dump
 def getTodaysData(ticker):
     jsonDump = cleanUpJSON(getJSONDataDump(ticker))
-    print(getFundamentalsSummary(jsonDump))
-    
-    
-getTodaysData("CRM")
+    data = {}
+    data['fundamentalsSummary'] = getFundamentalsSummary(jsonDump)
+    data['technicals'] = getTechnicalSummary(jsonDump)
+    return data
+
