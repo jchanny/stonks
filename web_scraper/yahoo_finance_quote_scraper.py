@@ -7,6 +7,63 @@ from bs4 import BeautifulSoup
 
 URL_BASE = "https://finance.yahoo.com/quote/"
 
+#-------------------------------------------
+#JSON manipulation methods
+#-------------------------------------------
+
+def getQuoteSummaryStore(jsonDump):
+    return jsonDump['context']['dispatcher']['stores']['QuoteSummaryStore']
+
+def getResearchStore(jsonDump):
+    return jsonDump['context']['dispatcher']['stores']['ResearchPageStore']
+
+#returns [technicalInsights][ticker]
+def getTechnicalInsights(jsonDump):
+    rsrchStore = getResearchStore(jsonDump)
+    ticker = list(rsrchStore['technicalInsights'].keys())[0]
+    return rsrchStore['technicalInsights'][ticker]
+    
+#-------------------------------------------
+#data retrieval methods
+#-------------------------------------------
+
+#returns technical info summary 
+def getTechnicalSummary(jsonDump):
+    output = {}
+    filteredData = getTechnicalInsights(jsonDump)
+    output['company'] = filteredData['companySnapshot']['company']
+    output['outlook'] = filteredData['instrumentInfo']['technicalEvents']['shortTermOutlook']
+    output['technicals'] = filteredData['instrumentInfo']['keyTechnicals']
+    output['valuation'] = filteredData['instrumentInfo']['valuation']
+    output['technicalTrend'] = filteredData['events']
+    output['targetPrice'] = filteredData['recommendation']
+    return output;
+
+#returns fundamental data 
+def getFundamentalsSummary(jsonDump):
+    output = {}
+    quoteStore = getQuoteSummaryStore(jsonDump)
+    output['analystTrend'] = quoteStore['recommendationTrend']
+
+    priceMeasures = {}
+    for measure in quoteStore['price']:
+        if quoteStore['price'][measure]:
+           priceMeasures[measure] = quoteStore['price'][measure]
+           
+    output['price'] = priceMeasures
+    fundamentalStats = {}
+    
+    for stat in quoteStore['defaultKeyStatistics']:
+        if quoteStore['defaultKeyStatistics'][stat]:
+            fundamentalStats[stat] = quoteStore['defaultKeyStatistics'][stat]
+    for stat in quoteStore['financialData']:
+        if quoteStore['financialData'][stat]:
+            fundamentalStats[stat] = quoteStore['financialData'][stat]
+
+    output['fundamentals'] = fundamentalStats
+    return output
+    
+#kills off some subscripts to minimize the JSON dump    
 def cleanUpJSON(jsonDump):
     del jsonDump['context']['dispatcher']['stores']['PageStore']
     del jsonDump['context']['dispatcher']['stores']['MRTStore']
@@ -41,7 +98,7 @@ def cleanUpJSON(jsonDump):
     
 #returns the JSON data dump for a given ticker, this is raw dog
 def getJSONDataDump(ticker):
-    soup = BeautifulSoup(requests.get(URL_BASE + ticker).text)
+    soup = BeautifulSoup(requests.get(URL_BASE + ticker).text, 'lxml')
     pattern = re.compile('root.App.main')
     res = str(soup.find_all('script',text = pattern))
     jsonStr = res.split('\n')[5].split(' = ')[1][:-1]
@@ -50,6 +107,7 @@ def getJSONDataDump(ticker):
 #main entry point. given ticker, gib json dump
 def main(ticker):
     jsonDump = cleanUpJSON(getJSONDataDump(ticker))
-    return jsonDump
+    print(getFundamentalsSummary(jsonDump))
     
     
+main("CRM")
