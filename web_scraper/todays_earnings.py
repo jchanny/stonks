@@ -33,13 +33,13 @@ def getEarningsForDate(dt):
     #parse tMinusOne afternoon earnings
     data = extractStockTableForDate(tMinusOne)
     for earnings in data:
-        if earnings[1] == 'After Market':
+        if earnings[1] != 'Before Market': # many will be "not supplied"
             output.append(earnings)
 
     #this mornings earning reports
     data = extractStockTableForDate(t)
     for earnings in data:
-        if earnings[1] == 'Before Market':           
+        if earnings[1] != 'After Market':           
             output.append(earnings)
 
     return output

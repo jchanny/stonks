@@ -12,4 +12,8 @@ sys.path.insert(1,'web_scraper/')
 import pandas as pd
 import matplotlib as mp
 
+def readPickle():
+    f = open("10_25_2020_earnings.pkl", "rb")
+    data = pickle.load(f)
+    print(data)
 

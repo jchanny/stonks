@@ -31,12 +31,17 @@ def getTechnicalInsights(jsonDump):
 def getTechnicalSummary(jsonDump):
     output = {}
     filteredData = getTechnicalInsights(jsonDump)
-    output['company'] = filteredData['companySnapshot']['company']
-    output['outlook'] = filteredData['instrumentInfo']['technicalEvents']['shortTermOutlook']
-    output['technicals'] = filteredData['instrumentInfo']['keyTechnicals']
-    output['valuation'] = filteredData['instrumentInfo']['valuation']
-    output['technicalTrend'] = filteredData['events']
-    output['targetPrice'] = filteredData['recommendation']
+    
+    if 'companySnapshot' in filteredData:
+        output['company'] = filteredData['companySnapshot']['company']
+    if 'instrumentInfo' in filteredData:
+        output['outlook'] = filteredData['instrumentInfo']['technicalEvents']['shortTermOutlook']
+        output['technicals'] = filteredData['instrumentInfo']['keyTechnicals']
+        output['valuation'] = filteredData['instrumentInfo']['valuation']
+    if 'events' in filteredData:
+        output['technicalTrend'] = filteredData['events']
+    if 'recommendation' in filteredData:
+        output['targetPrice'] = filteredData['recommendation']
     return output;
 
 #returns fundamental data 
@@ -47,18 +52,15 @@ def getFundamentalsSummary(jsonDump):
 
     priceMeasures = {}
     for measure in quoteStore['price']:
-        if quoteStore['price'][measure]:
-           priceMeasures[measure] = quoteStore['price'][measure]
+        priceMeasures[measure] = quoteStore['price'][measure]
            
     output['price'] = priceMeasures
     fundamentalStats = {}
     
     for stat in quoteStore['defaultKeyStatistics']:
-        if quoteStore['defaultKeyStatistics'][stat]:
-            fundamentalStats[stat] = quoteStore['defaultKeyStatistics'][stat]
+        fundamentalStats[stat] = quoteStore['defaultKeyStatistics'][stat]
     for stat in quoteStore['financialData']:
-        if quoteStore['financialData'][stat]:
-            fundamentalStats[stat] = quoteStore['financialData'][stat]
+        fundamentalStats[stat] = quoteStore['financialData'][stat]
 
     output['fundamentals'] = fundamentalStats
     return output
@@ -114,4 +116,5 @@ def getTodaysData(ticker):
     data['fundamentalsSummary'] = getFundamentalsSummary(jsonDump)
     data['technicals'] = getTechnicalSummary(jsonDump)
     return data
+
 
