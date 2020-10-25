@@ -108,9 +108,9 @@ def getJSONDataDump(ticker):
     return json.loads(jsonStr)
 
 #main entry point. given ticker, gib json dump
-def main(ticker):
+def getTodaysData(ticker):
     jsonDump = cleanUpJSON(getJSONDataDump(ticker))
     print(getFundamentalsSummary(jsonDump))
     
     
-main("CRM")
+getTodaysData("CRM")

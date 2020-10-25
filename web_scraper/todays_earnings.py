@@ -16,6 +16,7 @@ def extractStockTableForDate(date):
     table = []
     soup = BeautifulSoup(getEarningsHTMLForDate(date), 'lxml')
     table_body = soup.find('tbody')
+    print(table_body)
     rows = table_body.find_all('tr')
     for row in rows:
         cols = row.find_all('td')
@@ -32,6 +33,6 @@ def main():
         if earnings[1] != 'After Market':
             continue
 
-main()
+print(extractStockTableForDate("10/23/2020"))
 
 
