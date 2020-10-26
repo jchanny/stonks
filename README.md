@@ -1,5 +1,8 @@
 # stonks
-various stonk analysis tools
+various stonk analysis tools:
+
+v1: Web scraper scrapes and dumps pickle'd data into an S3 data lake (maybe a data swamp?). Do something with the data.
+v2: Create a service to query the data lake 
 
 The web_scraper folder:
   - scraper.py: main entry point that will get data for S&P500 + Nasdaq 100 stocks that reported at market close yesterday or today before market open and save it to a pickle.
