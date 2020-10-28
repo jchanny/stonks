@@ -10,10 +10,70 @@ REVISION HISTORY
 import sys
 sys.path.insert(1,'web_scraper/')
 import pandas as pd
+import pickle
 import matplotlib as mp
+from datetime import date
+import decimal
 
-def readPickle():
-    f = open("10_25_2020_earnings.pkl", "rb")
+def getShortTermOutlook(tickerData):
+    return tickerData['outlook']['direction']
+
+#returns difference between preMarket price & previous close
+def priceChange(tickerData):
+    #compare previous close to open, THIS MUST BE RUN BEFORE MARKET OPEN OF CURRENT DAY!!
+    prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPrice']['fmt'])
+    if tickerData['fundamentalsSummary']['price']['preMarketPrice']:
+        preMarket = float(tickerData['fundamentalsSummary']['price']['preMarketPrice']['fmt'])
+    else:
+        return 0.0
+    return round((preMarket - prevClose) / prevClose, 3)
+
+def getTrend(tickerData):
+    #higher score is stronger signal
+    return tickerData['technicals']['outlook']['direction'] + ", " + str(tickerData['technicals']['outlook']['score'])
+
+def getChartPattern(tickerData):
+    return tickerData['technicals']['technicalTrend'][0]['eventType']
+
+#returns an array in the following format: [support,resistance,stopLoss]
+def getTechnicalLevels(tickerData):
+    data = []
+    key = tickerData['technicals']['technicals']
+    try:
+        data.append(key['support'])
+        data.append(key['resistance'])
+        data.append(key['stopLoss'])
+    except KeyError:
+        return ""
+    return data;
+
+#returns the trading discount this stock is trading at (-10% means 10% overvalued)
+def getDiscount(tickerData):
+    try:
+        return tickerData['technicals']['valuation']['discount']
+    except KeyError:
+        return ""
+    
+def readPickleIntoDict(date):
+    f = open("./web_scraper/" + date + "_earnings.pkl", "rb")
     data = pickle.load(f)
-    print(data)
+    return data; #yes loading into memory, i know i know but its fairly small
 
+
+def read():
+    today = date.today().strftime("%m_%d_%Y")
+    data = readPickleIntoDict(today)
+    output = []
+    for ticker in data:
+        erData = {}
+        erData['ticker'] = ticker
+        erData['erResult'] = priceChange(data[ticker])
+        if erData['erResult'] == 0.0:
+            continue
+        erData['trend'] = getTrend(data[ticker])
+        erData['chartPattern'] = getChartPattern(data[ticker])
+        erData['technicalLevels'] = getTechnicalLevels(data[ticker])
+        erData['discount'] = getDiscount(data[ticker])
+        print(erData)
+        output.append(erData)
+read()

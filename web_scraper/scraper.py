@@ -22,9 +22,7 @@ def getBigStonkSet():
 
 #saves detailed data for companies that reported earnings this morning or yesterday afternoon
 def todaysEarningsResults():
-   # today = date.today().strftime("%m/%d/%Y")
-    today = date.today()
-    today = (today - timedelta(days = 2)).strftime("%m/%d/%Y")
+    today = date.today().strftime("%m/%d/%Y")
     earningsTable = er.getEarningsForDate(today)
     stockFilterSet = getBigStonkSet()
     if earningsTable[0][0] == '':
@@ -42,4 +40,5 @@ def todaysEarningsResults():
     pickle.dump(data, output)
     output.close()
 
-
+    
+todaysEarningsResults()
