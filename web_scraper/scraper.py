@@ -39,6 +39,5 @@ def todaysEarningsResults():
     output = open(fileName, "wb+") #will always create file as binary
     pickle.dump(data, output)
     output.close()
-
     
 todaysEarningsResults()

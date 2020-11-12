@@ -11,41 +11,56 @@ import sys
 sys.path.insert(1,'web_scraper/')
 import pandas as pd
 import pickle
+import csv
 import matplotlib as mp
-from datetime import date
+from datetime import datetime, timedelta
 import decimal
 
 def getShortTermOutlook(tickerData):
-    return tickerData['outlook']['direction']
+    try:
+        return tickerData['outlook']['direction']
+    except KeyError:
+        return ""
 
 #returns difference between preMarket price & previous close
 def priceChange(tickerData):
     #compare previous close to open, THIS MUST BE RUN BEFORE MARKET OPEN OF CURRENT DAY!!
-    prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPrice']['fmt'])
-    if tickerData['fundamentalsSummary']['price']['preMarketPrice']:
-        preMarket = float(tickerData['fundamentalsSummary']['price']['preMarketPrice']['fmt'])
-    else:
+    try:
+        prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPrice']['fmt'].replace(',',''))
+        preMarket = float(tickerData['fundamentalsSummary']['price']['preMarketPrice']['fmt'].replace(',',''))
+        return round((preMarket - prevClose) / prevClose, 3)
+    except KeyError:
         return 0.0
-    return round((preMarket - prevClose) / prevClose, 3)
 
 def getTrend(tickerData):
     #higher score is stronger signal
-    return tickerData['technicals']['outlook']['direction'] + ", " + str(tickerData['technicals']['outlook']['score'])
+    try:
+        direction = tickerData['technicals']['outlook']['direction']
+        score =  tickerData['technicals']['outlook']['score']
+        if direction == "Bearish":
+            score *= -1
+        return score
+    except KeyError:
+        return 0
 
 def getChartPattern(tickerData):
-    return tickerData['technicals']['technicalTrend'][0]['eventType']
+    try:
+        return tickerData['technicals']['technicalTrend'][0]['eventType']
+    except KeyError:
+        return ""
 
 #returns an array in the following format: [support,resistance,stopLoss]
 def getTechnicalLevels(tickerData):
     data = []
-    key = tickerData['technicals']['technicals']
     try:
+        key = tickerData['technicals']['technicals']
         data.append(key['support'])
         data.append(key['resistance'])
         data.append(key['stopLoss'])
+        return data
     except KeyError:
         return ""
-    return data;
+
 
 #returns the trading discount this stock is trading at (-10% means 10% overvalued)
 def getDiscount(tickerData):
@@ -55,25 +70,40 @@ def getDiscount(tickerData):
         return ""
     
 def readPickleIntoDict(date):
-    f = open("./web_scraper/" + date + "_earnings.pkl", "rb")
-    data = pickle.load(f)
-    return data; #yes loading into memory, i know i know but its fairly small
+    try:
+        f = open("./web_scraper/" + date + "_earnings.pkl", "rb")
+        data = pickle.load(f)
+        return data; #yes loading into memory, i know i know but its fairly small
+    except Exception:
+        return ""
 
 
-def read():
-    today = date.today().strftime("%m_%d_%Y")
-    data = readPickleIntoDict(today)
-    output = []
-    for ticker in data:
-        erData = {}
-        erData['ticker'] = ticker
-        erData['erResult'] = priceChange(data[ticker])
-        if erData['erResult'] == 0.0:
-            continue
-        erData['trend'] = getTrend(data[ticker])
-        erData['chartPattern'] = getChartPattern(data[ticker])
-        erData['technicalLevels'] = getTechnicalLevels(data[ticker])
-        erData['discount'] = getDiscount(data[ticker])
-        print(erData)
-        output.append(erData)
-read()
+#converts pickels to csv of earnings data from dateFrom to dateTo, inclusive
+def pklToCsv(dateFrom,dateTo):
+    #today = date.today().strftime("%m_%d_%Y")
+    start = datetime.strptime(dateFrom, "%m_%d_%Y")
+    end = datetime.strptime(dateTo, "%m_%d_%Y")
+    delta = timedelta(days = 1)
+
+    #write to csv
+    outputFile = dateFrom + "_" + dateTo + "_earnings.csv"
+    with open(outputFile, "w") as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['ticker','date','priceChange','trend','chartPattern','technicalLevels','discount'])
+        #loop over each date's earnings
+        while start <= end:
+            date = start.strftime("%m_%d_%Y")
+            data = readPickleIntoDict(date)
+            #only extract certain data from the pickle
+            for ticker in data:
+                writer.writerow([ticker,
+                                 date,
+                                 priceChange(data[ticker]),
+                                 getTrend(data[ticker]),
+                                 getChartPattern(data[ticker]),
+                                 getTechnicalLevels(data[ticker]),
+                                 getDiscount(data[ticker])
+                                 ])                
+            start += delta
+        
+pklToCsv("10_25_2020","11_11_2020")

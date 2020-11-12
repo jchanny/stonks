@@ -1,0 +1,444 @@
+{
+  "AAL": {
+    "fundamentalsSummary": {
+      "analystTrend": {
+        "trend": [
+          {
+            "period": "0m",
+            "strongBuy": 4,
+            "buy": 5,
+            "hold": 7,
+            "sell": 2,
+            "strongSell": 0
+          },
+          {
+            "period": "-1m",
+            "strongBuy": 1,
+            "buy": 0,
+            "hold": 0,
+            "sell": 0,
+            "strongSell": 0
+          },
+          {
+            "period": "-2m",
+            "strongBuy": 1,
+            "buy": 0,
+            "hold": 0,
+            "sell": 0,
+            "strongSell": 0
+          },
+          {
+            "period": "-3m",
+            "strongBuy": 1,
+            "buy": 0,
+            "hold": 0,
+            "sell": 0,
+            "strongSell": 0
+          }
+        ],
+        "maxAge": 86400
+      },
+      "price": {
+        "quoteSourceName": "Delayed Quote",
+        "regularMarketOpen": {
+          "raw": 13.07,
+          "fmt": "13.07"
+        },
+        "averageDailyVolume3Month": {
+          "raw": 62659793,
+          "fmt": "62.66M",
+          "longFmt": "62,659,793"
+        },
+        "exchange": "NMS",
+        "regularMarketTime": 1603483201,
+        "volume24Hr": {},
+        "regularMarketDayHigh": {
+          "raw": 13.0784,
+          "fmt": "13.08"
+        },
+        "shortName": "American Airlines Group, Inc.",
+        "averageDailyVolume10Day": {
+          "raw": 54670500,
+          "fmt": "54.67M",
+          "longFmt": "54,670,500"
+        },
+        "longName": "American Airlines Group Inc.",
+        "regularMarketChange": {
+          "raw": -0.54999924,
+          "fmt": "-0.55"
+        },
+        "currencySymbol": "$",
+        "regularMarketPreviousClose": {
+          "raw": 13.15,
+          "fmt": "13.15"
+        },
+        "postMarketTime": 1603497553,
+        "preMarketPrice": {},
+        "exchangeDataDelayedBy": 0,
+        "toCurrency": "",
+        "postMarketChange": {
+          "raw": 0,
+          "fmt": "0.00"
+        },
+        "postMarketPrice": {
+          "raw": 12.6,
+          "fmt": "12.60"
+        },
+        "exchangeName": "NasdaqGS",
+        "preMarketChange": {},
+        "circulatingSupply": {},
+        "regularMarketDayLow": {
+          "raw": 12.42,
+          "fmt": "12.42"
+        },
+        "priceHint": {
+          "raw": 2,
+          "fmt": "2",
+          "longFmt": "2"
+        },
+        "currency": "USD",
+        "regularMarketPrice": {
+          "raw": 12.6,
+          "fmt": "12.60"
+        },
+        "regularMarketVolume": {
+          "raw": 90788972,
+          "fmt": "90.79M",
+          "longFmt": "90,788,972.00"
+        },
+        "lastMarket": "",
+        "regularMarketSource": "FREE_REALTIME",
+        "openInterest": {},
+        "marketState": "CLOSED",
+        "underlyingSymbol": "",
+        "marketCap": {
+          "raw": 6408763392,
+          "fmt": "6.41B",
+          "longFmt": "6,408,763,392.00"
+        },
+        "quoteType": "EQUITY",
+        "volumeAllCurrencies": {},
+        "postMarketSource": "DELAYED",
+        "strikePrice": {},
+        "symbol": "AAL",
+        "postMarketChangePercent": {
+          "raw": 0,
+          "fmt": "0.00%"
+        },
+        "preMarketSource": "DELAYED",
+        "maxAge": 1,
+        "fromCurrency": "",
+        "regularMarketChangePercent": {
+          "raw": -0.041825037,
+          "fmt": "-4.18%"
+        }
+      },
+      "fundamentals": {
+        "annualHoldingsTurnover": {},
+        "enterpriseToRevenue": {
+          "raw": 1.597,
+          "fmt": "1.60"
+        },
+        "beta3Year": {},
+        "profitMargins": {
+          "raw": -0.25558,
+          "fmt": "-25.56%"
+        },
+        "enterpriseToEbitda": {
+          "raw": -6.945,
+          "fmt": "-6.95"
+        },
+        "52WeekChange": {
+          "raw": -0.59821427,
+          "fmt": "-59.82%"
+        },
+        "morningStarRiskRating": {},
+        "forwardEps": {
+          "raw": -4.29,
+          "fmt": "-4.29"
+        },
+        "revenueQuarterlyGrowth": {},
+        "sharesOutstanding": {
+          "raw": 508632000,
+          "fmt": "508.63M",
+          "longFmt": "508,632,000"
+        },
+        "fundInceptionDate": {},
+        "annualReportExpenseRatio": {},
+        "totalAssets": {},
+        "bookValue": {
+          "raw": -10.869,
+          "fmt": "-10.87"
+        },
+        "sharesShort": {
+          "raw": 156636015,
+          "fmt": "156.64M",
+          "longFmt": "156,636,015"
+        },
+        "sharesPercentSharesOut": {
+          "raw": 0.308,
+          "fmt": "30.80%"
+        },
+        "fundFamily": "",
+        "lastFiscalYearEnd": {
+          "raw": 1577750400,
+          "fmt": "2019-12-31"
+        },
+        "heldPercentInstitutions": {
+          "raw": 0.84803003,
+          "fmt": "84.80%"
+        },
+        "netIncomeToCommon": {
+          "raw": -6293000192,
+          "fmt": "-6.29B",
+          "longFmt": "-6,293,000,192"
+        },
+        "trailingEps": {
+          "raw": -14.003,
+          "fmt": "-14.00"
+        },
+        "lastDividendValue": {
+          "raw": 0.1,
+          "fmt": "0.10"
+        },
+        "SandP52WeekChange": {
+          "raw": 0.1401484,
+          "fmt": "14.01%"
+        },
+        "priceToBook": {},
+        "heldPercentInsiders": {
+          "raw": 0.01165,
+          "fmt": "1.16%"
+        },
+        "nextFiscalYearEnd": {
+          "raw": 1640908800,
+          "fmt": "2021-12-31"
+        },
+        "yield": {},
+        "mostRecentQuarter": {
+          "raw": 1601424000,
+          "fmt": "2020-09-30"
+        },
+        "shortRatio": {
+          "raw": 2.77,
+          "fmt": "2.77"
+        },
+        "sharesShortPreviousMonthDate": {
+          "raw": 1598832000,
+          "fmt": "2020-08-31"
+        },
+        "floatShares": {
+          "raw": 502395951,
+          "fmt": "502.4M",
+          "longFmt": "502,395,951"
+        },
+        "beta": {},
+        "enterpriseValue": {
+          "raw": 39329759232,
+          "fmt": "39.33B",
+          "longFmt": "39,329,759,232"
+        },
+        "priceHint": {
+          "raw": 2,
+          "fmt": "2",
+          "longFmt": "2"
+        },
+        "threeYearAverageReturn": {},
+        "lastSplitDate": {
+          "raw": 1386547200,
+          "fmt": "2013-12-09"
+        },
+        "lastSplitFactor": "0:1",
+        "legalType": "",
+        "lastDividendDate": {
+          "raw": 1580774400,
+          "fmt": "2020-02-04"
+        },
+        "morningStarOverallRating": {},
+        "earningsQuarterlyGrowth": {},
+        "priceToSalesTrailing12Months": {},
+        "dateShortInterest": {
+          "raw": 1601424000,
+          "fmt": "2020-09-30"
+        },
+        "pegRatio": {
+          "raw": 0.02,
+          "fmt": "0.02"
+        },
+        "ytdReturn": {},
+        "forwardPE": {
+          "raw": -2.937063,
+          "fmt": "-2.94"
+        },
+        "maxAge": 86400,
+        "lastCapGain": {},
+        "shortPercentOfFloat": {
+          "raw": 0.4474,
+          "fmt": "44.74%"
+        },
+        "sharesShortPriorMonth": {
+          "raw": 151581485,
+          "fmt": "151.58M",
+          "longFmt": "151,581,485"
+        },
+        "category": "",
+        "fiveYearAverageReturn": {},
+        "ebitdaMargins": {
+          "raw": -0.23,
+          "fmt": "-23.00%"
+        },
+        "grossMargins": {
+          "raw": -0.062589996,
+          "fmt": "-6.26%"
+        },
+        "operatingCashflow": {
+          "raw": -3080000000,
+          "fmt": "-3.08B",
+          "longFmt": "-3,080,000,000"
+        },
+        "revenueGrowth": {
+          "raw": -0.734,
+          "fmt": "-73.40%"
+        },
+        "operatingMargins": {
+          "raw": -0.32772,
+          "fmt": "-32.77%"
+        },
+        "ebitda": {
+          "raw": -5663000064,
+          "fmt": "-5.66B",
+          "longFmt": "-5,663,000,064"
+        },
+        "targetLowPrice": {
+          "raw": 1,
+          "fmt": "1.00"
+        },
+        "recommendationKey": "hold",
+        "grossProfits": {
+          "raw": 12560000000,
+          "fmt": "12.56B",
+          "longFmt": "12,560,000,000"
+        },
+        "freeCashflow": {
+          "raw": -7982624768,
+          "fmt": "-7.98B",
+          "longFmt": "-7,982,624,768"
+        },
+        "targetMedianPrice": {
+          "raw": 10,
+          "fmt": "10.00"
+        },
+        "currentPrice": {
+          "raw": 12.6,
+          "fmt": "12.60"
+        },
+        "earningsGrowth": {},
+        "currentRatio": {
+          "raw": 0.744,
+          "fmt": "0.74"
+        },
+        "returnOnAssets": {
+          "raw": -0.08137,
+          "fmt": "-8.14%"
+        },
+        "numberOfAnalystOpinions": {
+          "raw": 16,
+          "fmt": "16",
+          "longFmt": "16"
+        },
+        "targetMeanPrice": {
+          "raw": 11.25,
+          "fmt": "11.25"
+        },
+        "debtToEquity": {},
+        "returnOnEquity": {},
+        "targetHighPrice": {
+          "raw": 27,
+          "fmt": "27.00"
+        },
+        "totalCash": {
+          "raw": 8284000256,
+          "fmt": "8.28B",
+          "longFmt": "8,284,000,256"
+        },
+        "totalDebt": {
+          "raw": 41204998144,
+          "fmt": "41.2B",
+          "longFmt": "41,204,998,144"
+        },
+        "totalRevenue": {
+          "raw": 24622000128,
+          "fmt": "24.62B",
+          "longFmt": "24,622,000,128"
+        },
+        "totalCashPerShare": {
+          "raw": 16.287,
+          "fmt": "16.29"
+        },
+        "financialCurrency": "USD",
+        "revenuePerShare": {
+          "raw": 54.772,
+          "fmt": "54.77"
+        },
+        "quickRatio": {
+          "raw": 0.568,
+          "fmt": "0.57"
+        },
+        "recommendationMean": {
+          "raw": 3.4,
+          "fmt": "3.40"
+        }
+      }
+    },
+    "technicals": {
+      "company": {
+        "innovativeness": 0.8798999999999999,
+        "hiring": 0.6986,
+        "sustainability": 0.7,
+        "insiderSentiments": 0.9686,
+        "earningsReports": 0.3406,
+        "dividends": 0.583
+      },
+      "outlook": {
+        "stateDescription": "Recent bearish events outweigh bullish events.",
+        "direction": "Bearish",
+        "score": 2,
+        "scoreDescription": "Bearish Evidence",
+        "sectorDirection": "Bullish",
+        "sectorScore": 2,
+        "sectorScoreDescription": "Bullish Evidence",
+        "indexDirection": "Bearish",
+        "indexScore": 2,
+        "indexScoreDescription": "Bearish Evidence"
+      },
+      "technicals": {
+        "provider": "Trading Central",
+        "support": 12.59,
+        "resistance": 13.16,
+        "stopLoss": 11.094276
+      },
+      "valuation": {
+        "color": 1,
+        "description": "Undervalued",
+        "discount": "9%",
+        "relativeValue": "Discount",
+        "provider": "Trading Central"
+      },
+      "technicalTrend": [
+        {
+          "eventType": "Price Crosses Moving Average",
+          "pricePeriod": "D",
+          "tradingHorizon": "I",
+          "tradeType": "L",
+          "imageUrl": "https://s.yimg.com/uc/fin/img/assets/generic.svg",
+          "startDate": 1603373400,
+          "endDate": 1603373400
+        }
+      ],
+      "targetPrice": {
+        "provider": "Argus Research",
+        "rating": "HOLD"
+      }
+    }
+  }
+}
