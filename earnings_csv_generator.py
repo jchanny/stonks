@@ -48,19 +48,30 @@ def getChartPattern(tickerData):
     except KeyError:
         return ""
 
-#returns an array in the following format: [support,resistance,stopLoss]
-def getTechnicalLevels(tickerData):
-    data = []
+def getSupportDistance(tickerData):
     try:
-        key = tickerData['technicals']['technicals']
-        data.append(key['support'])
-        data.append(key['resistance'])
-        data.append(key['stopLoss'])
-        return data
+        key = tickerData['technicals']['technicals']        
+        prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
+        return (prevClose - key['support']) / key['support']
     except KeyError:
-        return ""
+        return 0.0
 
+def getResistanceDistance(tickerData):
+    try:
+        key = tickerData['technicals']['technicals']        
+        prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
+        return (prevClose - key['resistance']) / key['resistance']
+    except KeyError:
+        return 0.0
 
+def getStopLossDistance(tickerData):
+    try:
+        key = tickerData['technicals']['technicals']        
+        prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
+        return (prevClose - key['stopLoss']) / key['stopLoss']
+    except KeyError:
+        return 0.0
+    
 #returns the trading discount this stock is trading at (-10% means 10% overvalued)
 def getDiscount(tickerData):
     try:
@@ -85,10 +96,10 @@ def pklToCsv(dateFrom,dateTo):
     delta = timedelta(days = 1)
 
     #write to csv
-    outputFile = dateFrom + "_" + dateTo + "_earnings.csv"
+    outputFile = dateFrom + "__" + dateTo + "_earnings.csv"
     with open(outputFile, "w") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['ticker','date','priceChange','trend','chartPattern','technicalLevels','discount'])
+        writer.writerow(['ticker','date','priceChange','trend','chartPattern','supportDist','resistanceDist','stopLossDist','discount'])
         #loop over each date's earnings
         while start <= end:
             date = start.strftime("%m_%d_%Y")
@@ -98,13 +109,15 @@ def pklToCsv(dateFrom,dateTo):
                 #ASSUMPTION: returns 0.0 if preMarket data couldn't be found, likely that means ER wasn't on this date
                 if priceChange(data[ticker]) == 0.0:
                     continue
-                
+
                 writer.writerow([ticker,
                                  date,
                                  priceChange(data[ticker]),
                                  getTrend(data[ticker]),
                                  getChartPattern(data[ticker]),
-                                 getTechnicalLevels(data[ticker]),
+                                 getSupportDistance(data[ticker]),
+                                 getResistanceDistance(data[ticker]),
+                                 getStopLossDistance(data[ticker]),
                                  getDiscount(data[ticker])
                                  ])                
             start += delta
