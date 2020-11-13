@@ -9,10 +9,8 @@ REVISION HISTORY
 '''
 import sys
 sys.path.insert(1,'web_scraper/')
-import pandas as pd
 import pickle
 import csv
-import matplotlib as mp
 from datetime import datetime, timedelta
 import decimal
 
@@ -23,10 +21,11 @@ def getShortTermOutlook(tickerData):
         return ""
 
 #returns difference between preMarket price & previous close
+#will return 0.0 if no premarket data was found
 def priceChange(tickerData):
     #compare previous close to open, THIS MUST BE RUN BEFORE MARKET OPEN OF CURRENT DAY!!
     try:
-        prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPrice']['fmt'].replace(',',''))
+        prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
         preMarket = float(tickerData['fundamentalsSummary']['price']['preMarketPrice']['fmt'].replace(',',''))
         return round((preMarket - prevClose) / prevClose, 3)
     except KeyError:
@@ -96,6 +95,10 @@ def pklToCsv(dateFrom,dateTo):
             data = readPickleIntoDict(date)
             #only extract certain data from the pickle
             for ticker in data:
+                #ASSUMPTION: returns 0.0 if preMarket data couldn't be found, likely that means ER wasn't on this date
+                if priceChange(data[ticker]) == 0.0:
+                    continue
+                
                 writer.writerow([ticker,
                                  date,
                                  priceChange(data[ticker]),
@@ -106,4 +109,10 @@ def pklToCsv(dateFrom,dateTo):
                                  ])                
             start += delta
         
-pklToCsv("10_25_2020","11_11_2020")
+def main():
+    startDate = input("Enter start of time period to examine as m_d_YYYY: ")
+    endDate = input("Enter end of time period to examine as m_d_YYYY: ")
+    pklToCsv(startDate,endDate)
+
+if __name__ == '__main__':
+    main()
