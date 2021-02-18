@@ -2,13 +2,15 @@
 Program to Build a historical options chain from a quote
 
 REVISION HISTORY:
-    2/21 - v1 implementation
+    2/17/21 - v1 implementation
 '''
 import os
 import datetime
 import requests
 import time
 import tokens as tokens
+import csv
+import sys
 
 from datetime import date
 
@@ -17,8 +19,7 @@ accessToken = tokens.TradierAccessToken
 
 HISTORICAL = "https://sandbox.tradier.com/v1/markets/history"
 OPTION_SYMBOLS = "https://sandbox.tradier.com/v1/markets/options/lookup"
-
-
+CSV_COLUMNS = ['Date','Strike', 'P/C', 'High', 'Low', 'Open', 'Close', 'Volume']
 '''---------------------------------------------------------
                        UTILITIES
 ------------------------------------------------------------'''
@@ -45,12 +46,14 @@ def optionContracts(json):
     return json['symbols'][0]['options']
 
 def extractStrikeFromContract(contract,ticker):
-    strike = contract[len(ticker) + 6 :]
+    strike = contract[len(ticker) + 7 :]
     return int(int(strike) / 1000)
 
-def filterContractsByExpiration(json, expiration):
-    tickerLen = len(optionRootSymbol(json))
-    contracts = optionContracts(json)
+def getOptionType(contract, ticker):
+    return contract[len(ticker) + 6 : len(ticker) + 7]
+
+def filterContractsByExpiration(contracts, ticker, expiration):
+    tickerLen = len(ticker)
     yy = expiration[2:4]
     mm = expiration[5:7]
     dd = expiration[8:10]
@@ -142,20 +145,22 @@ def getHistoricalData(contract, start, end):
     return requests.get(HISTORICAL, params = payload, headers = headersObj).json()
 
 '''------------------------------------------------------
-       Main methods
+       Main API call methods
 --------------------------------------------------------'''
-
-''' @param symbol: stock ticker
+''' @param ticker: stock ticker
     @param days: days from today to go back (note days, not trading days)
+    @param atmPrice: price to use as the "at the money" price
     @param maxStrikes: max number of strikes in each direction to return, default is 25
     @returns: json object with historical options chain for options that haven't expired yet
     '''
-def getHistoricalChain1MonthOut(symbol, days, maxStrikes = 25):
+def getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes = 25):
     expDate = get3rdFridayNextMonth()
-    options = filterContractsByExpiration(getOptionContracts(symbol), expDate)
-    start = (datetime.datetime.now() - datetime.timedelta(30)).strftime('%Y-%m-%d')
+    options = optionContracts(getOptionContracts(ticker))
+    options = filterContractsByExpiration(options, ticker, expDate)
+    options = filterContractsByStrike(options, maxStrikes, ticker, atmPrice)
+    start = (datetime.datetime.now() - datetime.timedelta(days)).strftime('%Y-%m-%d')
     end = (datetime.datetime.now()).strftime('%Y-%m-%d')
-
+    
     data = {}
     batchCount = 1
     for option in options:
@@ -166,6 +171,51 @@ def getHistoricalChain1MonthOut(symbol, days, maxStrikes = 25):
         batchCount = batchCount + 1
     return data
 
-def getHistoricalChain(symbol, start, end, maxStrikes = 25):
-    #calculate all expirations between start + end
+'''-----------------------------------------------------------
+           CSV writing utilities
+--------------------------------------------------------------'''
+def writeContract(ticker, contract, contractData, writer):
+    strike = extractStrikeFromContract(contract, ticker)
+    data = contractData[contract]
+    optionType = getOptionType(contract, ticker)
+    for day in data:
+        row = []
+        row.append(data[day]['date']) #date
+        row.append(strike) #strike
+        row.append(optionType) #P/C
+        row.append(data[day]['high']) #high
+        row.append(data[day]['low']) #low
+        row.append(data[day]['open']) #open
+        row.append(data[day]['close']) #close
+        row.append(data[day]['volume']) #volume
+        writer.writerow(row)
 
+
+def writeCSV(ticker, days, atmPrice, maxStrikes, startDate, endDate):
+    filename = ticker + startDate + "_" + endDate
+
+    with open(filename, 'w', newline='') as file:
+        contractStats = getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes)
+        writer = csv.writer(file)
+        writer.writerow(CSV_COLUMNS)
+        for contract in contractStats:
+            writeContract(ticker, contract, contractStats[contract], writer)
+
+def main():
+    ticker = input("Enter a ticker: ")
+    days = input("Enter number of days to look back from today: ")
+    atmPrice = input("Enter today's close price for the ticker: ")
+    maxStrikes = input("Enter the max number of strikes to show: ")
+    #input validation
+    for arg in ticker,days,atmPrice,maxStrikes:
+        if arg == None || arg == 0:
+            return 0
+
+    endDate = datetime.datetime.now().strftime('%Y-%m-%d')
+    startDate = (datetime.datetime.now() - datetime.timedelta(days)).strftime('%Y-%m-%d')
+    print("Output file will be " + ticker + startDate + "_" + endDate)
+
+    writeCSV(ticker, days, atmPrice, maxStrikes, startDate, endDate)
+
+if __name__ == '__main__':
+    main()
