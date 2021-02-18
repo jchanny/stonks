@@ -199,6 +199,32 @@ def writeCSV(ticker, days, atmPrice, maxStrikes, startDate, endDate):
         for contract in contractStats:
             writer.writerow(writeContract(ticker, contract, contractStats[contract]))
 
+'''---------------------------------------------------------
+          Main entry points
+-----------------------------------------------------------'''
+def speedScraper():
+    tickerArr = []
+    priceArr = []
+
+    while True:
+        ticker = input("Enter a ticker: ")
+        if ticker == "":
+            break
+        tickerArr.append(ticker)
+        
+    days = int(input("Enter number of days to look back from today: "))
+    for i in range(len(tickerArr)):
+        atmPrice = int(input("Enter today's close price for " + tickerArr[i] + ": "))
+        priceArr.append(atmPrice)
+    maxStrikes = int(input("Enter the max number of strikes to show: "))
+
+    endDate = datetime.datetime.now().strftime('%Y-%m-%d')
+    startDate = (datetime.datetime.now() - datetime.timedelta(days)).strftime('%Y-%m-%d')
+
+    for i in range(len(tickerArr)):
+        writeCSV(tickerArr[i], days, priceArr[i], maxStrikes, startDate, endDate)
+    
+
 def main():
     ticker = input("Enter a ticker: ")
     days = int(input("Enter number of days to look back from today: "))
