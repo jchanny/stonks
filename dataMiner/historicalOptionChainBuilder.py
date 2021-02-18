@@ -8,14 +8,13 @@ import os
 import datetime
 import requests
 import time
-import tokens as tokens
 import csv
 import sys
 
 from datetime import date
 
-appToken = tokens.TradierAppToken
-accessToken = tokens.TradierAccessToken
+appToken = os.environ.get('TradierAppToken')
+accessToken = os.environ.get('TradierAccessToken')
 
 HISTORICAL = "https://sandbox.tradier.com/v1/markets/history"
 OPTION_SYMBOLS = "https://sandbox.tradier.com/v1/markets/options/lookup"
@@ -174,42 +173,37 @@ def getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes = 25):
 '''-----------------------------------------------------------
            CSV writing utilities
 --------------------------------------------------------------'''
-def writeContract(ticker, contract, contractData, writer):
+def writeContract(ticker, contract, contractData):
     strike = extractStrikeFromContract(contract, ticker)
-    data = contractData[contract]
     optionType = getOptionType(contract, ticker)
-    for day in data:
+    for day in contractData:
         row = []
-        row.append(data[day]['date']) #date
+        row.append(day['date']) #date
         row.append(strike) #strike
         row.append(optionType) #P/C
-        row.append(data[day]['high']) #high
-        row.append(data[day]['low']) #low
-        row.append(data[day]['open']) #open
-        row.append(data[day]['close']) #close
-        row.append(data[day]['volume']) #volume
-        writer.writerow(row)
+        row.append(day['high']) #high
+        row.append(day['low']) #low
+        row.append(day['open']) #open
+        row.append(day['close']) #close
+        row.append(day['volume']) #volume
+    return row
 
 
 def writeCSV(ticker, days, atmPrice, maxStrikes, startDate, endDate):
-    filename = ticker + startDate + "_" + endDate
+    filename = "data/" + ticker + startDate + "_" + endDate + ".csv"
 
     with open(filename, 'w', newline='') as file:
         contractStats = getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes)
         writer = csv.writer(file)
         writer.writerow(CSV_COLUMNS)
         for contract in contractStats:
-            writeContract(ticker, contract, contractStats[contract], writer)
+            writer.writerow(writeContract(ticker, contract, contractStats[contract]))
 
 def main():
     ticker = input("Enter a ticker: ")
-    days = input("Enter number of days to look back from today: ")
-    atmPrice = input("Enter today's close price for the ticker: ")
-    maxStrikes = input("Enter the max number of strikes to show: ")
-    #input validation
-    for arg in ticker,days,atmPrice,maxStrikes:
-        if arg == None || arg == 0:
-            return 0
+    days = int(input("Enter number of days to look back from today: "))
+    atmPrice = int(input("Enter today's close price for the ticker: "))
+    maxStrikes = int(input("Enter the max number of strikes to show: "))
 
     endDate = datetime.datetime.now().strftime('%Y-%m-%d')
     startDate = (datetime.datetime.now() - datetime.timedelta(days)).strftime('%Y-%m-%d')
