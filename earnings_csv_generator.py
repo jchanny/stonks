@@ -29,7 +29,7 @@ def priceChange(tickerData):
         preMarket = float(tickerData['fundamentalsSummary']['price']['preMarketPrice']['fmt'].replace(',',''))
         return round((preMarket - prevClose) / prevClose, 3)
     except KeyError:
-        return 0.0
+        return ""
 
 def getTrend(tickerData):
     #higher score is stronger signal
@@ -40,7 +40,7 @@ def getTrend(tickerData):
             score *= -1
         return score
     except KeyError:
-        return 0
+        return ""
 
 def getChartPattern(tickerData):
     try:
@@ -54,7 +54,7 @@ def getSupportDistance(tickerData):
         prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
         return (prevClose - key['support']) / key['support']
     except KeyError:
-        return 0.0
+        return ""
 
 def getResistanceDistance(tickerData):
     try:
@@ -62,7 +62,7 @@ def getResistanceDistance(tickerData):
         prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
         return (prevClose - key['resistance']) / key['resistance']
     except KeyError:
-        return 0.0
+        return ""
 
 def getStopLossDistance(tickerData):
     try:
@@ -70,7 +70,7 @@ def getStopLossDistance(tickerData):
         prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
         return (prevClose - key['stopLoss']) / key['stopLoss']
     except KeyError:
-        return 0.0
+        return ""
     
 #returns the trading discount this stock is trading at (-10% means 10% overvalued)
 def getDiscount(tickerData):
@@ -78,7 +78,44 @@ def getDiscount(tickerData):
         return tickerData['technicals']['valuation']['discount']
     except KeyError:
         return ""
-    
+
+def getShortRatio(tickerData):
+    try:
+        return float(tickerData['fundamentalsSummary']['fundamentals']['shortRatio']['raw'])
+    except KeyError:
+        return ""
+
+#-------------------------------------------------------------
+#              fundamentals data
+#-------------------------------------------------------------
+
+def getPercentHeldInstitutions(tickerData):
+    try:
+        return float(tickerData['fundamentalsSummary']['fundamentals']['heldPercentInstitutions']['raw'])
+    except KeyError:
+        return ""
+
+def getDistanceToTargetMedianPrice(tickerData):
+    try:
+        targetMedian = float(tickerData['fundamentalsSummary']['fundamentals']['targetMedianPrice']['fmt'].replace(',',''))
+        prevClose = float(tickerData['fundamentalsSummary']['price']['regularMarketPreviousClose']['fmt'].replace(',',''))
+        return (prevClose - targetMedian) / targetMedian
+    except Exception:
+        return ""
+
+def getAnalystRatingRatio(tickerData):
+    try:
+        currentTrend = tickerData['fundamentalsSummary']['analystTrend']['trend'][0]
+        strongBuy = currentTrend['strongBuy']
+        buy = currentTrend['buy']
+        sell = currentTrend['sell']
+        strongSell = currentTrend['strongSell']
+        total = strongBuy + buy + sell + strongSell
+        return (((strongBuy * 1.5) + buy) - (sell + (strongSell * 1.5))) / total
+    except Exception:
+        return ""
+
+#-------------------------------------------------------------
 def readPickleIntoDict(date):
     try:
         f = open("./web_scraper/" + date + "_earnings.pkl", "rb")
@@ -99,7 +136,7 @@ def pklToCsv(dateFrom,dateTo):
     outputFile = dateFrom + "__" + dateTo + "_earnings.csv"
     with open(outputFile, "w") as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['ticker','date','priceChange','trend','chartPattern','supportDist','resistanceDist','stopLossDist','discount'])
+        writer.writerow(['ticker','date','priceChange','trend','chartPattern','supportDist','resistanceDist','stopLossDist','discount','shortRatio','institutionHeld','targetPriceDist','analystScore'])
         #loop over each date's earnings
         while start <= end:
             date = start.strftime("%m_%d_%Y")
@@ -118,7 +155,11 @@ def pklToCsv(dateFrom,dateTo):
                                  getSupportDistance(data[ticker]),
                                  getResistanceDistance(data[ticker]),
                                  getStopLossDistance(data[ticker]),
-                                 getDiscount(data[ticker])
+                                 getDiscount(data[ticker]),
+                                 getShortRatio(data[ticker]),
+                                 getPercentHeldInstitutions(data[ticker]),
+                                 getDistanceToTargetMedianPrice(data[ticker]),
+                                 getAnalystRatingRatio(data[ticker])
                                  ])                
             start += delta
         
