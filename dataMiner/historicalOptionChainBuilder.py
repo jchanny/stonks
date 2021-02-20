@@ -76,7 +76,7 @@ def filterContractsByStrike(contracts, strikes, ticker, targetPrice):
     strikesList.sort()
     
     atmIdx = strikesList.index(getAtMoneyPrice(targetPrice, strikesList))
-    if int(len(strikesList) / 2) <= strikes:
+    if len(strikesList) <= strikes:
         return contracts
     
     #generate set of strikes to pull
@@ -87,8 +87,10 @@ def filterContractsByStrike(contracts, strikes, ticker, targetPrice):
     for i in range(strikes):
         validStrikes.add(strikesList[leftPtr])
         validStrikes.add(strikesList[rightPtr])
-        leftPtr = leftPtr - 1
-        rightPtr = rightPtr + 1
+        if leftPtr > 0:
+            leftPtr = leftPtr - 1
+        if rightPtr < len(strikesList) - 1:
+            rightPtr = rightPtr + 1
     
     #now actually get the contracts that match the strike
     output = []
@@ -166,7 +168,10 @@ def getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes = 25):
         if batchCount > 59 : #rate limiting is 60
             time.sleep(60)
             batchCount = 0
-        data[option] = getHistoricalData(option, start, end)['history']['day']
+        try:
+            data[option] = getHistoricalData(option, start, end)['history']['day']
+        except Exception:
+            continue
         batchCount = batchCount + 1
     return data
 
@@ -177,15 +182,19 @@ def writeContract(ticker, contract, contractData):
     strike = extractStrikeFromContract(contract, ticker)
     optionType = getOptionType(contract, ticker)
     for day in contractData:
-        row = []
-        row.append(day['date']) #date
-        row.append(strike) #strike
-        row.append(optionType) #P/C
-        row.append(day['high']) #high
-        row.append(day['low']) #low
-        row.append(day['open']) #open
-        row.append(day['close']) #close
-        row.append(day['volume']) #volume
+        try:
+            row = []
+            row.append(day['date']) #date
+            row.append(strike) #strike
+            row.append(optionType) #P/C
+            row.append(day['high']) #high
+            row.append(day['low']) #low
+            row.append(day['open']) #open
+            row.append(day['close']) #close
+            row.append(day['volume']) #volume
+        except Exception:
+            continue
+        
     return row
 
 
@@ -193,7 +202,10 @@ def writeCSV(ticker, days, atmPrice, maxStrikes, startDate, endDate):
     filename = "data/" + ticker + startDate + "_" + endDate + ".csv"
 
     with open(filename, 'w', newline='') as file:
-        contractStats = getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes)
+        try:
+            contractStats = getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes)
+        except Exception:
+            continue
         writer = csv.writer(file)
         writer.writerow(CSV_COLUMNS)
         for contract in contractStats:
@@ -223,6 +235,7 @@ def speedScraper():
 
     for i in range(len(tickerArr)):
         writeCSV(tickerArr[i], days, priceArr[i], maxStrikes, startDate, endDate)
+        time.sleep(60)
     
 
 def main():
