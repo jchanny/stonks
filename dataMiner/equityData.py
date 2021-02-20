@@ -25,15 +25,15 @@ def getStockData(ticker, startDate, endDate, interval, showMarketHoursDataOnly =
         startTime = "06:30"
         endTime = "18:59"
 
-    if interval not in {1,5,15}:
-        return
+    if interval not in {'1min', '5min', '15min'}:
+        return 
 
     fqStartDate = startDate + " " + startTime
     fqEndDate = endDate + " " + endTime
 
     headersObj = {
         'Accept' : 'application/json',
-        'Authorization' : 'Bearer' + accessToken
+        'Authorization' : 'Bearer ' + accessToken
     }
 
     payload = {
@@ -45,7 +45,7 @@ def getStockData(ticker, startDate, endDate, interval, showMarketHoursDataOnly =
     }
     return requests.get(INTRADAY_URL, params = payload, headers = headersObj).json()
 
-def writeCSV(ticker, startDate, endDate, interval = 15, showMarketHoursDataOnly = True):
+def writeCSV(ticker, startDate, endDate, interval = '5min', showMarketHoursDataOnly = True):
     filename = "equityData/" + ticker + startDate + "_" + endDate + ".csv"
 
     with open(filename, 'w', newLine = '') as file:
@@ -55,7 +55,7 @@ def writeCSV(ticker, startDate, endDate, interval = 15, showMarketHoursDataOnly 
         try:
             dataArr = data['series']['data']
             dataRow = []
-            for dataPoint in len(dataArr):
+            for dataPoint in range(len(dataArr)):
                 fullDate = dataArr[dataPoint]['time']
                 dataRow.append(fullDate.split("T")[0]) #date
                 dataRow.append(fullDate.split("T")[1]) #time
@@ -66,3 +66,19 @@ def writeCSV(ticker, startDate, endDate, interval = 15, showMarketHoursDataOnly 
                 dataRow.append(dataArr[dataPoint]['volume'])
                 dataRow.append(dataArr[dataPoint]['vwap'])
             writer.writerow(dataRow)
+        except Exception:
+            return
+
+def speedScraper():
+    tickerArr = []
+    while True:
+        ticker = input("Enter a ticker: ")
+        if ticker == "":
+            break
+        tickerArr.append(ticker)
+
+    startDate = input("Enter a start date as YYYY-MM-DD")
+    endDate = input("Enter an end date as YYYY-MM-DD")
+
+    for i in range(len(tickerArr)):
+        writeCSV(tickerArr[i], startDate, endDate, interval = '5min')
