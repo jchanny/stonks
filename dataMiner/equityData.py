@@ -6,6 +6,9 @@ REVISION HISTORY
     2/21 - Initial implementation
 '''
 import requests 
+import os
+import sys
+import csv
 
 appToken = os.environ.get('TradierAppToken')
 accessToken = os.environ.get('TradierAccessToken')
@@ -48,14 +51,14 @@ def getStockData(ticker, startDate, endDate, interval, showMarketHoursDataOnly =
 def writeCSV(ticker, startDate, endDate, interval = '5min', showMarketHoursDataOnly = True):
     filename = "equityData/" + ticker + startDate + "_" + endDate + ".csv"
 
-    with open(filename, 'w', newLine = '') as file:
+    with open(filename, 'w', newline = '') as file:
         data = getStockData(ticker, startDate, endDate, interval, showMarketHoursDataOnly)
         writer = csv.writer(file)
         writer.writerow(CSV_COLUMNS)
         try:
             dataArr = data['series']['data']
-            dataRow = []
             for dataPoint in range(len(dataArr)):
+                dataRow = []
                 fullDate = dataArr[dataPoint]['time']
                 dataRow.append(fullDate.split("T")[0]) #date
                 dataRow.append(fullDate.split("T")[1]) #time
@@ -65,7 +68,7 @@ def writeCSV(ticker, startDate, endDate, interval = '5min', showMarketHoursDataO
                 dataRow.append(dataArr[dataPoint]['close'])
                 dataRow.append(dataArr[dataPoint]['volume'])
                 dataRow.append(dataArr[dataPoint]['vwap'])
-            writer.writerow(dataRow)
+                writer.writerow(dataRow)
         except Exception:
             return
 
@@ -77,8 +80,11 @@ def speedScraper():
             break
         tickerArr.append(ticker)
 
-    startDate = input("Enter a start date as YYYY-MM-DD")
-    endDate = input("Enter an end date as YYYY-MM-DD")
+    startDate = input("Enter a start date as YYYY-MM-DD: ")
+    endDate = input("Enter an end date as YYYY-MM-DD: ")
+
+    if startDate = '' or endDate = '':
+        return
 
     for i in range(len(tickerArr)):
         writeCSV(tickerArr[i], startDate, endDate, interval = '5min')
