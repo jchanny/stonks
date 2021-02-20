@@ -205,7 +205,7 @@ def writeCSV(ticker, days, atmPrice, maxStrikes, startDate, endDate):
         try:
             contractStats = getHistoricalChain1MonthOut(ticker, days, atmPrice, maxStrikes)
         except Exception:
-            continue
+            return
         writer = csv.writer(file)
         writer.writerow(CSV_COLUMNS)
         for contract in contractStats:
